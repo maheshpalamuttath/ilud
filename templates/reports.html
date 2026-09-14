@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports — In-Library Use Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='reports.css') }}">
+</head>
+<body>
+
+<header class="desk-header">
+  <div class="desk-header__mark">&#9776;</div>
+  <div class="desk-header__text">
+    <h1>Reports</h1>
+    <p>In-library-use history — issues, returns, by day or by patron</p>
+  </div>
+  <a class="desk-header__link" href="{{ url_for('index') }}">&larr; Back to desk</a>
+</header>
+
+<main class="reports">
+
+  <nav class="tabs" role="tablist">
+    <button class="tab tab--active" data-tab="date" type="button">By date</button>
+    <button class="tab" data-tab="range" type="button">Date range</button>
+    <button class="tab" data-tab="patron" type="button">By card number</button>
+  </nav>
+
+  <section class="tab-panel tab-panel--active" data-panel="date">
+    <div class="report-controls">
+      <label for="date-input">Date</label>
+      <input type="date" id="date-input">
+      <button id="date-run" class="btn btn--secondary" type="button">Run</button>
+      <a id="date-export" class="btn btn--secondary btn--export" href="/api/reports/date/export">Export to Excel</a>
+    </div>
+    <div class="report-summary" id="date-summary"></div>
+    <div class="report-table-wrap">
+      <table class="report-table" id="date-table">
+        <thead>
+          <tr>
+            <th>Barcode</th><th>Title</th><th>Type</th><th>Patron</th><th>Card #</th>
+            <th>Issued</th><th>Returned</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="report-empty" data-for="date" hidden>No activity on this date.</p>
+  </section>
+
+  <section class="tab-panel" data-panel="range">
+    <div class="report-controls">
+      <label for="range-start">From</label>
+      <input type="date" id="range-start">
+      <label for="range-end">To</label>
+      <input type="date" id="range-end">
+      <button id="range-run" class="btn btn--secondary" type="button">Run</button>
+      <a id="range-export" class="btn btn--secondary btn--export" href="/api/reports/range/export">Export to Excel</a>
+    </div>
+    <div class="report-summary" id="range-summary"></div>
+    <div class="report-table-wrap">
+      <table class="report-table" id="range-table">
+        <thead>
+          <tr>
+            <th>Barcode</th><th>Title</th><th>Type</th><th>Patron</th><th>Card #</th>
+            <th>Issued</th><th>Returned</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="report-empty" data-for="range" hidden>No activity in this range.</p>
+  </section>
+
+  <section class="tab-panel" data-panel="patron">
+    <div class="report-controls">
+      <label for="patron-cardnumber">Card number</label>
+      <input type="text" id="patron-cardnumber" inputmode="numeric" placeholder="e.g. 12345">
+      <label for="patron-start">From <span class="hint">(optional)</span></label>
+      <input type="date" id="patron-start">
+      <label for="patron-end">To <span class="hint">(optional)</span></label>
+      <input type="date" id="patron-end">
+      <button id="patron-run" class="btn btn--secondary" type="button">Run</button>
+      <a id="patron-export" class="btn btn--secondary btn--export" href="/api/reports/patron/export">Export to Excel</a>
+    </div>
+    <div class="report-summary" id="patron-summary"></div>
+    <div class="report-table-wrap">
+      <table class="report-table" id="patron-table">
+        <thead>
+          <tr>
+            <th>Barcode</th><th>Title</th><th>Type</th>
+            <th>Issued</th><th>Returned</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="report-empty" data-for="patron" hidden>No history for this card number.</p>
+  </section>
+
+</main>
+
+<script src="{{ url_for('static', filename='reports.js') }}" data-today="{{ today }}"></script>
+</body>
+</html>
