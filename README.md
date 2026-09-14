@@ -30,15 +30,15 @@ The application works with an existing **Koha** installation to verify patrons a
 ### 1. Create the application directory
 
 ```bash
-sudo mkdir -p /opt/reading-room-desk
-sudo chown $USER:$USER /opt/reading-room-desk
-cd /opt/reading-room-desk
+sudo mkdir -p /opt/ilud
+sudo chown $USER:$USER /opt/ilud
+cd /opt/ilud
 ```
 
 Copy the application files into this directory:
 
 ```text
-/opt/reading-room-desk/
+/opt/ilud/
 ├── app.py
 ├── requirements.txt
 ├── schema.sql
@@ -219,7 +219,7 @@ pip install gunicorn
 Create the environment file:
 
 ```bash
-cat > /opt/reading-room-desk/.env << 'EOF'
+cat > /opt/ilud/.env << 'EOF'
 KOHA_DB_HOST=127.0.0.1
 KOHA_DB_PORT=3306
 KOHA_DB_USER=koha_self
@@ -233,7 +233,7 @@ EOF
 Protect the file:
 
 ```bash
-chmod 600 /opt/reading-room-desk/.env
+chmod 600 /opt/ilud/.env
 ```
 
 ### Configuration
@@ -263,13 +263,14 @@ Only items belonging to these item types can be used through the application.
 Activate the virtual environment:
 
 ```bash
-cd /opt/reading-room-desk
+cd /opt/ilud
 source venv/bin/activate
 ```
 
 Load the environment variables:
 
 ```bash
+sudo su
 set -a
 source .env
 set +a
@@ -298,7 +299,7 @@ http://192.168.29.2:5050
 Create the service:
 
 ```bash
-sudo tee /etc/systemd/system/reading-room-desk.service > /dev/null << 'EOF'
+sudo tee /etc/systemd/system/ilud.service > /dev/null << 'EOF'
 [Unit]
 Description=Reading Room Desk
 After=network.target mysql.service
@@ -306,9 +307,9 @@ After=network.target mysql.service
 [Service]
 User=www-data
 Group=www-data
-WorkingDirectory=/opt/reading-room-desk
-EnvironmentFile=/opt/reading-room-desk/.env
-ExecStart=/opt/reading-room-desk/venv/bin/gunicorn -w 2 -b 0.0.0.0:5050 app:app
+WorkingDirectory=/opt/ilud
+EnvironmentFile=/opt/ilud/.env
+ExecStart=/opt/ilud/venv/bin/gunicorn -w 2 -b 0.0.0.0:5050 app:app
 Restart=on-failure
 RestartSec=5
 
@@ -320,27 +321,27 @@ EOF
 Set permissions and start the service:
 
 ```bash
-sudo chown -R www-data:www-data /opt/reading-room-desk
+sudo chown -R www-data:www-data /opt/ilud
 sudo systemctl daemon-reload
-sudo systemctl enable --now reading-room-desk
+sudo systemctl enable --now ilud
 ```
 
 Check status:
 
 ```bash
-sudo systemctl status reading-room-desk
+sudo systemctl status ilud
 ```
 
 View logs:
 
 ```bash
-sudo journalctl -u reading-room-desk -f
+sudo journalctl -u ilud -f
 ```
 
 After making changes to the application:
 
 ```bash
-sudo systemctl restart reading-room-desk
+sudo systemctl restart ilud
 ```
 
 The application will be available at:
@@ -433,7 +434,7 @@ echo "venv/" >> .gitignore
 ## Project Structure
 
 ```text
-reading-room-desk/
+ilud/
 ├── app.py
 ├── requirements.txt
 ├── schema.sql
