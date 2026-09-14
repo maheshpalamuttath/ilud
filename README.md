@@ -1,5 +1,4 @@
-# Reading Room Desk
-
+# In-Library Use Desk
 A simple self-checkout and check-in application for library reading rooms.
 
 The application works with an existing **Koha** installation to verify patrons and library items, while maintaining its own separate database for reading-room usage records.
