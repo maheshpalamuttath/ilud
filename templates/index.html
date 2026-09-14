@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In-Library Use Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="desk-header">
+  <div class="desk-header__mark">&#9776;</div>
+  <div class="desk-header__text">
+    <h1>In-Library Use Desk</h1>
+    <p>Self checkout for in-library use only — books stay in the building</p>
+  </div>
+  <div class="desk-header__types">Allowed: {{ allowed_types|join(', ') }}</div>
+  <a class="desk-header__link" href="{{ url_for('reports') }}">Reports &rarr;</a>
+</header>
+
+<main class="desk">
+
+  <section class="ledger ledger--out" aria-labelledby="checkout-heading">
+    <h2 id="checkout-heading"><span class="ledger__num">1</span> Check out</h2>
+
+    <div class="field-group">
+      <label for="cardnumber">Card number</label>
+      <div class="field-row">
+        <input id="cardnumber" type="text" inputmode="numeric" autocomplete="off" placeholder="Scan or type card number" autofocus>
+        <button id="lookup-btn" class="btn btn--secondary" type="button">Find</button>
+      </div>
+    </div>
+
+    <div id="patron-card" class="patron-card patron-card--empty">
+      <p class="patron-card__hint">No patron looked up yet.</p>
+    </div>
+
+    <div class="field-group">
+      <label for="barcodes">Item barcodes <span class="hint">(one per line)</span></label>
+      <textarea id="barcodes" rows="6" placeholder="1010&#10;1212" disabled></textarea>
+    </div>
+
+    <button id="issue-btn" class="btn btn--primary" type="button" disabled>Issue for library use</button>
+
+    <ul id="issue-results" class="result-list" aria-live="polite"></ul>
+  </section>
+
+  <section class="ledger ledger--in" aria-labelledby="return-heading">
+    <h2 id="return-heading"><span class="ledger__num">2</span> Return</h2>
+
+    <div class="field-group">
+      <label for="return-barcodes">Item barcodes <span class="hint">(one per line)</span></label>
+      <textarea id="return-barcodes" rows="4" placeholder="1010&#10;1212"></textarea>
+    </div>
+
+    <button id="return-btn" class="btn btn--primary" type="button">Return</button>
+
+    <ul id="return-results" class="result-list" aria-live="polite"></ul>
+
+    <div class="in-use-head">
+      <h3>Currently in use in the library</h3>
+      <span id="in-use-count" class="in-use-count">0</span>
+    </div>
+    <ul id="in-use-list" class="in-use-list" aria-live="polite">
+      <li class="in-use-empty">Nothing checked out for in-library use right now.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="desk-footer">
+  Patron and item details are read from Koha. This desk does not create or affect Koha circulation records.
+  <br>© 2026 Crafted by <a href="https://maheshpalamuttath.info/" target="_blank" class="footer_lnk" target="_blank" rel="noopener">Mahesh Palamuttath</a>
+</footer>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
